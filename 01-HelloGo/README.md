@@ -21,7 +21,7 @@
 
 ### 1. 컴파일러 설치
 
-(https://go.dev/dl/)[https://go.dev/dl/] 페이지에서 운영체제에 맞는 버전 설치
+[https://go.dev/dl/](https://go.dev/dl/) 페이지에서 운영체제에 맞는 버전 설치
 
 설치 후 명령 프롬프트에서 `go version` 명령으로 설치 여부 확인
 
