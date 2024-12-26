@@ -49,13 +49,13 @@ func main() {
 	fmt.Println("시즈탱크 이름:", siegeTank.Name, "체력:", siegeTank.HP, "공격력:", siegeTank.Attack, "공중 여부:", siegeTank.IsFlying)
 
 	// 5. 채널 (chan): 유닛 명령 전달
-	var unitCommands chan string = make(chan string, 3)
-	unitCommands <- "Move to Point A"
-	unitCommands <- "Attack Enemy"
-	unitCommands <- "Hold Position"
+	// var unitCommands chan string = make(chan string, 3)
+	// unitCommands <- "Move to Point A"
+	// unitCommands <- "Attack Enemy"
+	// unitCommands <- "Hold Position"
 
-	fmt.Println("\n유닛 명령 (채널):")
-	fmt.Println("첫 번째 명령:", <-unitCommands)
-	fmt.Println("두 번째 명령:", <-unitCommands)
-	fmt.Println("세 번째 명령:", <-unitCommands)
+	// fmt.Println("\n유닛 명령 (채널):")
+	// fmt.Println("첫 번째 명령:", <-unitCommands)
+	// fmt.Println("두 번째 명령:", <-unitCommands)
+	// fmt.Println("세 번째 명령:", <-unitCommands)
 }
