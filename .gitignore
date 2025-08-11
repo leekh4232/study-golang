@@ -1,0 +1,12 @@
+.DS_Store
+.vscode
+.idea
+.idea_modules/
+.gradle/
+Thumbs.db
+bin/
+logs/
+upload/
+out/
+build/
+*.exe
