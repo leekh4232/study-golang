@@ -4,7 +4,8 @@ import "fmt"
 
 func main() {
 	// 1.1 `var` 키워드를 사용한 변수 선언 및 초기화
-	// Java: `String characterName = "Hossam";`와 유사. Go는 타입이 뒤에 온다.
+	// Java: `String characterName = "Hossam";`와 유사.
+	// Go는 타입이 뒤에 온다.
 	var characterName string = "Hossam"
 	// Java: `int characterLevel = 99;`와 유사.
 	var characterLevel int = 99
