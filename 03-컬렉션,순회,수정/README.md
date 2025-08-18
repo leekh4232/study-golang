@@ -488,11 +488,11 @@ sequenceDiagram
 
     main->>main: scores := map[string]int{...}
     main->>main: sum := 0
-    
+
     loop for each score in scores
         main->>main: sum += score
     end
-    
+
     main->>main: avg := float64(sum) / float64(len(scores))
     main->>main: Printf("총점: %d, 평균: %.2f", sum, avg)
 ```
