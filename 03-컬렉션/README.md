@@ -409,7 +409,26 @@ func main() {
 
 **실습 파일: `03-컬렉션/05-score-avg/main.go`**
 
+<<<<<<< HEAD:03-컬렉션/README.md
 이 최종 예제는 맵에 저장된 학생들의 점수를 `for-range` 루프로 탐색하며 총점을 계산하고, 이를 바탕으로 평균 점수를 구하는 전체 흐름을 보여준다. 정수 나눗셈 시 발생할 수 있는 데이터 손실을 막기 위해 `float64` 타입으로 명시적 형 변환을 수행하는 과정이 포함되어 있다.
+=======
+이 최종 예제는 맵에 저장된 학생들의 점수를 `for-range` 루프로 순회하며 총점을 계산하고, 이를 바탕으로 평균 점수를 구하는 전체 흐름을 보여줍니다. 정수 나눗셈 시 발생할 수 있는 데이터 손실을 막기 위해 `float64` 타입으로 명시적 형 변환을 수행하는 과정이 포함되어 있습니다.
+
+```mermaid
+sequenceDiagram
+    participant main as "main()"
+
+    main->>main: scores := map[string]int{...}
+    main->>main: sum := 0
+
+    loop for each score in scores
+        main->>main: sum += score
+    end
+
+    main->>main: avg := float64(sum) / float64(len(scores))
+    main->>main: Printf("총점: %d, 평균: %.2f", sum, avg)
+```
+>>>>>>> fa98706a86c91264861cf575484fda925ddb10a9:03-컬렉션,순회,수정/README.md
 
 ```go
 package main

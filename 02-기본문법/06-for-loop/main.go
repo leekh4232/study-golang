@@ -18,16 +18,7 @@ func main() {
 		count++
 	}
 
-	// 6.3 `for-range`문 (Java의 향상된 for문 `for (Type item : collection)`과 유사)
-	// 배열, 슬라이스, 맵, 문자열, 채널 등을 순회할 때 사용한다.
-	// 슬라이스/배열/문자열의 경우 `index`와 `value`를 반환한다.
-	fmt.Println("--- for-range문 ---")
-	items := []string{"물약", "검", "방패"} // 문자열 슬라이스 선언
-	for index, item := range items {   // `index`는 요소의 인덱스, `item`은 요소의 값
-		fmt.Printf("%d: %s\n", index, item)
-	}
-
-	// 6.4 무한 루프 (Java의 `while (true)` 또는 `for (;;)`)와 동일
+	// 6.3 무한 루프 (Java의 `while (true)` 또는 `for (;;)`)와 동일
 	// `for {}` 형태로 사용한다.
 	// for {
 	//     fmt.Println("무한 루프!")
