@@ -67,4 +67,8 @@ func main() {
 	} else {
 		fmt.Printf("결과: %.2f %s %.2f = %.2f\n", num1, operator, num2, result)
 	}
+
+	// 종료 대기 메시지 및 입력 대기
+	fmt.Print("종료하려면 아무 키나 누르세요...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }

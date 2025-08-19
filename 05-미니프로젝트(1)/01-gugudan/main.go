@@ -32,4 +32,8 @@ func main() {
 	for i := 1; i <= 9; i++ {
 		fmt.Printf("%d x %d = %d\n", num, i, num*i)
 	}
+
+	// 종료 대기 메시지 및 입력 대기
+	fmt.Print("종료하려면 아무 키나 누르세요...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }
