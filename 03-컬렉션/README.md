@@ -1,5 +1,5 @@
 ﻿---
-title: "Go언어의 컬렉션 자료형, 순회, 수정"
+title: "Go언어의 컬렉션 자료형"
 description: "이 포스팅에서는 Go의 대표적인 컬렉션 자료형(배열, 슬라이스, 맵)을 Java와 비교하며, 실제로 데이터를 집계하는 프로그램을 완성하는 과정을 다룹니다. 각 단계마다 실습 예제를 통해 직접 코드를 작성해보고, 최종적으로 `학생 점수 집계` 프로그램을 완성합니다."
 categories: [03.Coding,Golang]
 date:   2024-10-17 11:33:00 +0900
@@ -11,9 +11,7 @@ math: true
 mermaid: true
 ---
 
-# Go언어의 컬렉션 자료형, 순회, 수정
-
-> 컬렉션 자료형을 활용한 데이터 집계 프로그램 만들기
+# Go언어의 컬렉션 자료형
 
 ## 1. Go의 컬렉션 자료형과 Java 비교
 
@@ -65,11 +63,11 @@ Go는 데이터를 효율적으로 관리하기 위한 다양한 컬렉션 자�
 
 ## 3. 실습 1: 배열과 슬라이스 선언 및 초기화
 
-Go에서 배열은 고정된 크기를 가지며, 슬라이스는 동적인 크기를 가진다. 이 둘의 선언 및 초기화 방법을 이해하는 것이 중요하다.
+Go에서 배열은 고정된 크기를 가지며, 슬라이스는 동적인 크기를 가진다.
 
-**실습 파일: `03-컬렉션,순회,수정/01-array_slice/main.go`**
+**실습 파일: `03-컬렉션/01-array_slice/main.go`**
 
-아래 예제는 Go의 배열과 슬라이스가 함수에 전달될 때 어떻게 다르게 동작하는지 보여줍니다. `modifyArray` 함수는 배열의 복사본을 받아 수정하므로 원본 `arr1`은 변경되지 않습니다. 반면 `modifySlice` 함수는 슬라이스의 내부 배열을 가리키는 헤더를 복사하므로, 함수 내에서 요소를 수정하면 원본 `slice1`에 영향을 줍니다.
+아래 예제는 Go의 배열과 슬라이스가 함수에 전달될 때 어떻게 다르게 동작하는지 보여준다. `modifyArray` 함수는 배열의 복사본을 받아 수정하므로 원본 `arr1`은 변경되지 않는다. 반면 `modifySlice` 함수는 슬라이스의 내부 배열을 가리키는 헤더를 복사하므로, 함수 내에서 요소를 수정하면 원본 `slice1`에 영향을 준다.
 
 ```mermaid
 sequenceDiagram
@@ -81,13 +79,11 @@ sequenceDiagram
     main->>main: slice1 := []int{4, 5, 6}
     main->>+modifyArray: modifyArray(arr1) 호출 (값 복사)
     modifyArray->>modifyArray: arr[0] = 99 (복사본 수정)
-    modifyArray-->>-main: 반환
-    note right of main: arr1은 변경되지 않음
+    modifyArray-->>-main: 반환 (arr1은 변경되지 않음)
 
-    main->>+modifySlice: modifySlice(slice1) 호출 (헤더 복사)
+    main->>+modifySlice: modifySlice(slice1) 호출 (참조 복사)
     modifySlice->>modifySlice: s[0] = 99 (내부 배열 수정)
-    modifySlice-->>-main: 반환
-    note right of main: slice1의 내부 배열이 변경됨
+    modifySlice-->>-main: 반환 (slice1이 변경됨)
 ```
 
 ```go
@@ -131,7 +127,6 @@ func main() {
     fmt.Println("슬라이스 slice3 (길이 0, 용량 10):", slice3)
 
     // 슬라이스는 참조 타입(Reference Type)처럼 동작: 함수에 전달 시 내부 배열을 공유.
-    // 슬라이스 헤더(내부 배열 포인터, 길이, 용량)는 복사되지만, 포인터가 가리키는 내부 배열은 원본과 동일하다.
     // Java에서 객체(예: ArrayList)를 함수에 전달하여 객체 내부를 변경하는 것과 유사.
     modifySlice(slice1)
     fmt.Println("modifySlice 호출 후 slice1 (변화 있음):", slice1)
@@ -167,31 +162,9 @@ func modifySlice(s []int) {
 
 슬라이스는 동적인 크기를 가지므로, 요소를 추가하거나 삭제하는 것이 가능하다. `append` 함수를 사용하여 요소를 추가하고, 슬라이싱과 `append`를 조합하여 요소를 삭제한다.
 
-**실습 파일: `03-컬렉션,순회,수정/02-slice-append-delete/main.go`**
+**실습 파일: `03-컬렉션/02-slice-append-delete/main.go`**
 
-아래 예제는 `append` 함수를 사용하여 슬라이스에 요소를 추가하는 과정을 보여줍니다. `append`는 슬라이스의 용량이 부족할 경우, Go 런타임이 자동으로 더 큰 내부 배열을 할당하고 기존 요소를 복사하여 확장합니다. 또한, 슬라이싱과 `append`를 조합하여 특정 인덱스의 요소를 효과적으로 삭제하는 방법을 보여줍니다.
-
-```mermaid
-sequenceDiagram
-    participant main as "main()"
-    participant GoRuntime as "Go 런타임"
-
-    main->>main: slice := []int{1, 2, 3} (len=3, cap=3)
-    main->>main: slice = append(slice, 4)
-    note right of main: 용량(3) < 필요공간(4) -> 용량 확장 발생
-    main->>GoRuntime: 새로운 내부 배열 요청 (더 큰 용량, 예: 6)
-    GoRuntime-->>main: 새 배열 할당
-    main->>main: 기존 요소 복사 및 새 요소 추가
-    note right of main: slice 변수는 새 배열을 가리키는 새 슬라이스 헤더로 업데이트됨 (len=4, cap=6)
-
-    main->>main: sliceToDelete := []int{10, 20, 30, 40, 50}
-    note right of main: 인덱스 1의 요소 '20'을 삭제
-    main->>main: part1 = sliceToDelete[:1]  // [10]
-    main->>main: part2 = sliceToDelete[2:]  // [30, 40, 50]
-    main->>main: sliceToDelete = append(part1, part2...)
-    note right of main: 'part1'에 'part2'의 요소들을 이어붙여 새 슬라이스 생성
-    main->>main: 결과: [10, 30, 40, 50]
-```
+아래 예제는 `append` 함수를 사용하여 슬라이스에 요소를 추가하는 과정을 보여준다. `append`는 슬라이스의 용량이 부족할 경우, Go 런타임이 자동으로 더 큰 내부 배열을 할당하고 기존 요소를 복사하여 확장한다. 또한, 슬라이싱과 `append`를 조합하여 특정 인덱스의 요소를 효과적으로 삭제하는 방법을 보여준다.
 
 ```go
 package main
@@ -245,7 +218,7 @@ func main() {
 
     // 특정 값 삭제 (예: 30 삭제)
     // Go는 Java의 `remove(Object)`와 같은 직접적인 값 삭제 메서드를 제공하지 않는다.
-    // 순회하면서 해당 값을 제외하고 새 슬라이스를 만들거나, 위와 같은 슬라이싱 기법을 사용해야 한다.
+    // 탐색하면서 해당 값을 제외하고 새 슬라이스를 만들거나, 위와 같은 슬라이싱 기법을 사용해야 한다.
     // 여기서는 예시를 위해 간단한 루프를 사용한다.
     sliceByValue := []int{10, 20, 30, 20, 40}
     valToRemove := 20
@@ -267,28 +240,11 @@ func main() {
 
 Go의 맵은 키-값 쌍을 저장하는 데 사용된다. 맵은 `make` 함수로 초기화해야 하며, 키의 존재 여부를 확인하는 특별한 문법이 있다.
 
-**실습 파일: `03-컬렉션,순회,수정/03-map/main.go`**
+**실습 파일: `03-컬렉션/03-map/main.go`**
 
-아래 예제는 맵을 생성하고, 키-값 쌍을 추가, 수정, 조회, 삭제하는 전체 과정을 보여줍니다. 특히 Go의 "comma ok" 관용구를 사용하여 키의 존재 여부를 안전하게 확인하는 방법과 `delete` 함수로 요소를 제거하는 흐름을 설명합니다.
+아래 예제는 맵을 생성하고, 키-값 쌍을 추가, 수정, 조회, 삭제하는 전체 과정을 보여준다.
 
-```mermaid
-sequenceDiagram
-    participant main as "main()"
-
-    main->>main: playerStats := make(map[string]int)
-    main->>main: playerStats["Health"] = 100 (추가)
-    main->>main: playerStats["Mana"] = 50 (추가)
-    main->>main: playerStats["Health"] = 90 (수정)
-
-    main->>main: hp, ok := playerStats["Health"]
-    note right of main: ok=true, hp=90
-
-    main->>main: gold, ok := playerStats["Gold"]
-    note right of main: ok=false, gold=0 (int의 제로값)
-
-    main->>main: delete(playerStats, "Mana")
-    note right of main: "Mana" 키-값 쌍 삭제
-```
+특히 Go의 "comma ok" 관용구를 사용하여 키의 존재 여부를 안전하게 확인하는 방법과 `delete` 함수로 요소를 제거하는 흐름을 설명한다.
 
 ```go
 package main
@@ -330,7 +286,7 @@ func main() {
     mana := playerStats["Mana"]
     fmt.Println("Mana:", mana)
 
-    // 키 존재 여부 확인 (comma ok idiom): Go의 독특한 문법으로, 값과 함께 키의 존재 여부를 `bool` 값으로 반환한다.
+    // 키 존재 여부 확인 (comma ok): Go의 독특한 문법으로, 값과 함께 키의 존재 여부를 `bool` 값으로 반환한다.
     // Java의 `map.containsKey("key");`와 유사하다. Go는 값과 함께 존재 여부를 반환한다.
     hp, ok := playerStats["Health"]
     if ok { // `ok`가 `true`이면 키가 존재한다.
@@ -359,7 +315,7 @@ func main() {
 
     /** 맵의 특징 */
 
-    // 맵은 순서가 보장되지 않는다. 순회 시마다 순서가 달라질 수 있다.
+    // 맵은 순서가 보장되지 않는다. 탐색 시마다 순서가 달라질 수 있다.
     // Java의 `HashMap`도 순서가 보장되지 않는다. 순서가 필요한 경우 `LinkedHashMap`을 사용한다.
     // 맵의 제로 값은 `nil`이다. `nil` 맵은 요소를 추가할 수 없으며, 사용하려면 `make`로 초기화해야 한다.
     // Java의 `null` 맵에 `put` 시 `NullPointerException` 발생과 유사하다.
@@ -371,26 +327,15 @@ func main() {
 
 ---
 
-## 6. 실습 4: 컬렉션 순회 (for-range)
+## 6. 실습 4: 컬렉션 탐색 (for-range)
 
-Go에서 컬렉션을 순회하는 가장 일반적이고 강력한 방법은 `for-range` 문이다. `for-range`는 배열, 슬라이스, 문자열, 맵, 채널 등 다양한 컬렉션을 순회할 수 있다.
+Go에서 컬렉션을 탐색하는 가장 일반적이고 강력한 방법은 `for-range` 문이다. `for-range`는 배열, 슬라이스, 문자열, 맵, 채널 등 다양한 컬렉션을 탐색할 수 있다.
 
-**실습 파일: `03-컬렉션,순회,수정/04-iterate/main.go`**
+**실습 파일: `03-컬렉션/04-iterate/main.go`**
 
-아래 예제는 `for-range` 루프를 사용하여 슬라이스, 맵, 문자열 등 다양한 컬렉션을 순회하는 방법을 보여줍니다. 슬라이스를 순회할 때, 루프 변수 `num`은 원본 요소의 복사본이므로, 이를 수정해도 원본 슬라이스 `numbers`는 변경되지 않는다는 점이 중요합니다.
+아래 예제는 `for-range` 루프를 사용하여 슬라이스, 맵, 문자열 등 다양한 컬렉션을 탐색하는 방법을 보여준다.
 
-```mermaid
-sequenceDiagram
-    participant main as "main()"
-
-    main->>main: numbers := []int{10, 20, 30}
-    loop for-range loop
-        main->>main: 1. i=0, num=10 (numbers[0]의 복사본)
-        main->>main: 2. i=1, num=20 (numbers[1]의 복사본)
-        main->>main: 3. i=2, num=30 (numbers[2]의 복사본)
-    end
-    note right of main: 루프 변수 num을 수정해도<br/>원본 numbers 슬라이스는 변경되지 않음
-```
+슬라이스를 탐색할 때, 루프 변수 `num`은 원본 요소의 복사본이므로, 이를 수정해도 원본 슬라이스 `numbers`는 변경되지 않는다는 점이 중요하다.
 
 ```go
 package main
@@ -398,76 +343,60 @@ package main
 import "fmt"
 
 func main() {
-    /** 슬라이스 순회 */
+    /** 슬라이스 탐색 */
 
     // for-range는 인덱스와 값을 반환한다.
-    // 값은 복사본이므로, 순회 중 값을 변경해도 원본 슬라이스에는 영향을 주지 않는다.
+    // 값은 복사본이므로, 탐색 중 값을 변경해도 원본 슬라이스에는 영향을 주지 않는다.
     // Java의 향상된 for문(for-each)과 유사하지만, Go는 인덱스도 함께 얻을 수 있다.
     numbers := []int{10, 20, 30, 40, 50}
-    fmt.Println("--- 슬라이스 순회 ---")
+    fmt.Println("--- 슬라이스 탐색 ---")
     for i, num := range numbers {
         fmt.Printf("인덱스: %d, 값: %d\n", i, num)
         // num = 99 // num은 복사본이므로 원본 numbers에는 영향을 주지 않는다.
     }
-    fmt.Println("순회 후 슬라이스 (변화 없음):", numbers)
+    fmt.Println("탐색 후 슬라이스 (변화 없음):", numbers)
 
     // 값만 필요한 경우 인덱스를 _로 무시할 수 있다.
     // Java의 `for (int num : numbers)`와 동일한 효과.
-    fmt.Println("--- 슬라이스 값만 순회 ---")
+    fmt.Println("--- 슬라이스 값만 탐색 ---")
     for _, num := range numbers {
         fmt.Println("값:", num)
     }
 
-    /** 맵 순회 */
+    /** 맵 탐색 */
 
-    // 맵은 순서가 보장되지 않는다. 순회할 때마다 순서가 다를 수 있다.
+    // 맵은 순서가 보장되지 않는다. 탐색할 때마다 순서가 다를 수 있다.
     // for-range는 키와 값을 반환한다.
     // Java의 `for (Map.Entry<String, Integer> entry : scores.entrySet())`와 유사.
     scores := map[string]int{"Alice": 90, "Bob": 85, "Charlie": 95}
-    fmt.Println("--- 맵 순회 ---")
+    fmt.Println("--- 맵 탐색 ---")
     for name, score := range scores {
         fmt.Printf("학생: %s, 점수: %d\n", name, score)
     }
 
     // 키만 필요한 경우 값을 _로 무시할 수 있다.
     // Java의 `for (String name : scores.keySet())`와 유사.
-    fmt.Println("--- 맵 키만 순회 ---")
+    fmt.Println("--- 맵 키만 탐색 ---")
     for name := range scores {
         fmt.Println("학생:", name)
     }
 
-    /** 문자열 순회 */
+    /** 문자열 탐색 */
 
-    // 문자열을 for-range로 순회하면 유니코드 코드 포인트(rune)를 반환한다.
+    // 문자열을 for-range로 탐색하면 유니코드 코드 포인트(rune)를 반환한다.
     // 인덱스는 바이트 오프셋이다. Java는 `String.charAt(index)`로 char를 얻지만, 유니코드 처리는 별도.
     koreanString := "안녕하세요"
-    fmt.Println("--- 문자열 순회 ---")
+    fmt.Println("--- 문자열 탐색 ---")
     for i, r := range koreanString {
         fmt.Printf("인덱스: %d, 룬(문자): %c, 유니코드 값: %U\n", i, r, r)
     }
 
-    /** 배열 순회 (슬라이스와 유사) */
+    /** 배열 탐색 (슬라이스와 유사) */
 
     arr := [3]string{"A", "B", "C"}
-    fmt.Println("--- 배열 순회 ---")
+    fmt.Println("--- 배열 탐색 ---")
     for i, val := range arr {
         fmt.Printf("인덱스: %d, 값: %s\n", i, val)
-    }
-
-    /** 채널 순회 (간략히) */
-
-    // 채널은 고루틴 간 통신에 사용되는 타입이다.
-    // for-range를 사용하여 채널에서 값을 받을 수 있다.
-    // 채널이 닫히면 루프가 종료된다.
-    // Java의 `BlockingQueue.take()`와 유사하지만, Go는 언어 차원에서 지원.
-    ch := make(chan int, 2)
-    ch <- 1
-    ch <- 2
-    close(ch) // 채널을 닫아야 for-range가 종료된다.
-
-    fmt.Println("--- 채널 순회 ---")
-    for val := range ch {
-        fmt.Println("채널 값:", val)
     }
 }
 ```
@@ -476,26 +405,11 @@ func main() {
 
 ## 7. 실습 5: 최종 예제 - 학생 점수 집계 및 평균 계산
 
-앞서 배운 컬렉션 자료형과 순회 방법을 활용하여 간단한 학생 점수 집계 프로그램을 만들어 본다.
+앞서 배운 컬렉션 자료형과 탐색 방법을 활용하여 간단한 학생 점수 집계 프로그램을 만들어 본다.
 
-**실습 파일: `03-컬렉션,순회,수정/05-score-avg/main.go`**
+**실습 파일: `03-컬렉션/05-score-avg/main.go`**
 
-이 최종 예제는 맵에 저장된 학생들의 점수를 `for-range` 루프로 순회하며 총점을 계산하고, 이를 바탕으로 평균 점수를 구하는 전체 흐름을 보여줍니다. 정수 나눗셈 시 발생할 수 있는 데이터 손실을 막기 위해 `float64` 타입으로 명시적 형 변환을 수행하는 과정이 포함되어 있습니다.
-
-```mermaid
-sequenceDiagram
-    participant main as "main()"
-
-    main->>main: scores := map[string]int{...}
-    main->>main: sum := 0
-    
-    loop for each score in scores
-        main->>main: sum += score
-    end
-    
-    main->>main: avg := float64(sum) / float64(len(scores))
-    main->>main: Printf("총점: %d, 평균: %.2f", sum, avg)
-```
+이 최종 예제는 맵에 저장된 학생들의 점수를 `for-range` 루프로 탐색하며 총점을 계산하고, 이를 바탕으로 평균 점수를 구하는 전체 흐름을 보여준다. 정수 나눗셈 시 발생할 수 있는 데이터 손실을 막기 위해 `float64` 타입으로 명시적 형 변환을 수행하는 과정이 포함되어 있다.
 
 ```go
 package main
@@ -510,8 +424,8 @@ func main() {
 
     sum := 0 // 총점을 저장할 변수 초기화
 
-    /** `for-range`를 이용한 맵 순회 및 합계 계산 */
-    // 맵을 `for-range`로 순회하여 각 학생의 점수를 `sum`에 더한다.
+    /** `for-range`를 이용한 맵 탐색 및 합계 계산 */
+    // 맵을 `for-range`로 탐색하여 각 학생의 점수를 `sum`에 더한다.
     // 키(`name`)는 필요 없으므로 `_`로 무시한다.
     // Java의 `for (int score : scores.values()) { sum += score; }`와 유사하다.
     for _, score := range scores {

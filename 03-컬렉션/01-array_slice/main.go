@@ -38,7 +38,6 @@ func main() {
 	fmt.Println("슬라이스 slice3 (길이 0, 용량 10):", slice3)
 
 	// 슬라이스는 참조 타입(Reference Type)처럼 동작: 함수에 전달 시 내부 배열을 공유.
-	// 슬라이스 헤더(내부 배열 포인터, 길이, 용량)는 복사되지만, 포인터가 가리키는 내부 배열은 원본과 동일하다.
 	// Java에서 객체(예: ArrayList)를 함수에 전달하여 객체 내부를 변경하는 것과 유사.
 	modifySlice(slice1)
 	fmt.Println("modifySlice 호출 후 slice1 (변화 있음):", slice1)

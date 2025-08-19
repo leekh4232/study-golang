@@ -58,20 +58,4 @@ func main() {
 	for i, val := range arr {
 		fmt.Printf("인덱스: %d, 값: %s\n", i, val)
 	}
-
-	/** 채널 순회 (간략히) */
-
-	// 채널은 고루틴 간 통신에 사용되는 타입이다.
-	// for-range를 사용하여 채널에서 값을 받을 수 있다.
-	// 채널이 닫히면 루프가 종료된다.
-	// Java의 `BlockingQueue.take()`와 유사하지만, Go는 언어 차원에서 지원.
-	ch := make(chan int, 2)
-	ch <- 1
-	ch <- 2
-	close(ch) // 채널을 닫아야 for-range가 종료된다.
-
-	fmt.Println("--- 채널 순회 ---")
-	for val := range ch {
-		fmt.Println("채널 값:", val)
-	}
 }
