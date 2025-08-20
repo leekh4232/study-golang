@@ -27,10 +27,15 @@ func main() {
 	// 대량의 메모리 할당 함수 호출
 	allocateMemory()
 
+	// GC 후 메모리 상태 확인
+	runtime.ReadMemStats(&m)
+	fmt.Printf("GC 후 메모리 사용량 (HeapAlloc): %v MB\n", m.HeapAlloc/1024/1024)
+
 	// GC가 동작할 시간을 주기 위해 잠시 대기
 	time.Sleep(2 * time.Second)
 
 	// GC 호출 (명시적 호출은 권장되지 않지만, 테스트 목적으로 사용)
+	// JAVA는 System.gc();
 	runtime.GC()
 	fmt.Println("  GC 강제 호출 완료.")
 

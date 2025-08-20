@@ -1,9 +1,15 @@
 package main
 
+import "fmt"
+
 func main() {
-	var x int = 10
+	var num int = 10
+	var addr *int = &num
 
-	var y *int = &x
+	*addr++
 
-	print(y)
+	fmt.Println("num:", num)
+	fmt.Println("&num:", &num)
+	fmt.Println("addr:", addr)
+	fmt.Println("*addr:", *addr)
 }
