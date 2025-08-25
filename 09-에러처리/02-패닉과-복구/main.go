@@ -15,7 +15,7 @@ func handlePanic() {
 // 패닉을 발생시키는 함수
 func causePanic() {
 	// 함수가 종료되기 직전에 항상 handlePanic이 실행되도록 defer 설정
-	defer handlePanic()
+	//defer handlePanic()
 
 	// "심각한 에러" 메시지와 함께 패닉 발생
 	panic("심각한 에러")
