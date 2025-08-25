@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "last_updated": "2024-11-01T09:00:00Z",
+  "users": [
+    {
+      "id": 1,
+      "name": "김철수",
+      "email": "kim@example.com",
+      "age": 25,
+      "hobbies": [
+        "독서",
+        "프로그래밍",
+        "영화감상"
+      ],
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "이영희",
+      "email": "lee@example.com",
+      "age": 30,
+      "hobbies": [
+        "요리",
+        "여행"
+      ],
+      "is_active": false
+    },
+    {
+      "id": 3,
+      "name": "박민수",
+      "email": "park@example.com",
+      "age": 28,
+      "hobbies": [
+        "운동",
+        "게임",
+        "음악"
+      ],
+      "is_active": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "app_name": "Go File I/O 실습 앱",
+  "version": "1.0.0",
+  "debug": false,
+  "port": 8080,
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "myapp_db",
+    "username": "admin"
+  },
+  "features": {
+    "caching": true,
+    "logging": true,
+    "monitoring": false,
+    "new_ui": true
+  },
+  "last_updated": "2025-08-25T12:56:04.6143923+09:00"
+}
