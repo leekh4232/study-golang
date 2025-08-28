@@ -9,7 +9,7 @@ import (
 	"strings" // <-- 추가
 )
 
-/** 6. PK역할을 수행할 ID변수 */
+/** 5. PK역할을 수행할 ID변수 */
 var nextID = 3
 
 /** 1. Todo 자원을 나타내는 구조체 정의 */
